@@ -29,12 +29,11 @@ let kobisRequest = async (movieCd) => {
 }
 
 app.get("/", (req, res) => {
-    let params = req.params;
-    if (typeof params.movieCd === "undefined") {
+    let movieCd = req.query.movieCd
+    if (typeof movieCd === "undefined") {
         res.status(401).json({message: "잘못된 요청입니다."});
         return;
     }
-    let movieCd = params.movieCd
     kobisRequest(movieCd).then(url => {
         res.json({
             movieCd: movieCd,
