@@ -5,10 +5,27 @@ const cors = require('cors');
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 
+
+
 let app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
+
+const https = require('https');
+const fs = require('fs');
+
+const privkey = fs.readFileSync("./keys/privkey.pem");
+const cert = fs.readFileSync("./keys/cert.pem");
+const ca = fs.readFileSync("./keys/chain.pem");
+
+const credentials = {
+    key: privkey, cert: cert, ca: ca
+};
+
+https.createServer(credentials, app).listen(14524, "0.0.0.0", ()=>{
+    console.log("서버가 시작되었습니다.");
+})
 
 let kobisRequest = async (movieCd) => {
     let ret = "";
@@ -47,6 +64,3 @@ app.get("/", (req, res) => {
 // kobisRequest(20231496).then(uri => {
 //     console.log(uri);
 // })
-
-
-app.listen(14524);
